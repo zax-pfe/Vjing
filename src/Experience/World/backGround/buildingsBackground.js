@@ -2,53 +2,50 @@ import * as THREE from "three";
 import Experience from "../../Experience.js";
 import vertex from "../../shaders/round/vertex.glsl";
 import fragment from "../../shaders/round/fragment.glsl";
+import Building from "./Building.js";
+import EventEmitter from "../../Utils/EventEmitter.js";
 
-export default class BuildingsBackground {
+export default class BuildingsBackground extends EventEmitter {
   constructor() {
+    super();
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    this.size = this.setSize();
-
-    this.setGeometry();
-    this.setTextures();
-    this.setMaterial();
-    this.setMesh();
-  }
-
-  setGeometry() {
-    for (let i = 0; i < this.size; i++) {
-      this.geometry = new THREE.BoxGeometry(this.size, this.size, 1);
+    this.debug = this.experience.debug;
+    if (this.debug.active) {
+      this.setDebug();
     }
+
+    this.positionsArray = [
+      [0, 0, 5],
+      [3, 0, 5],
+      [-3, 0, 5],
+    ];
+    this.setBuildings();
   }
 
-  setTextures() {}
-
-  setMaterial() {
-    this.material = new THREE.ShaderMaterial({
-      vertexShader: vertex,
-      fragmentShader: fragment,
-      uniforms: {
-        uTime: { value: 0 },
+  setDebug() {
+    this.debugFolder = this.debug.ui.addFolder("buildingManager");
+    const debugObject = {
+      beatSimulation: () => {
+        // this.trigger("beat");
+        this.buildings.forEach((building) => {
+          // building.trigger("beat");
+          building.onBeat();
+        });
       },
-      side: THREE.DoubleSide,
-    });
+    };
+    this.debugFolder.add(debugObject, "beatSimulation");
   }
 
-  setSize() {
-    const randomInt = Math.floor(Math.random() * 4) + 3; // random int between 3 and 6
-    return randomInt;
-  }
+  setBuildings() {
+    this.buildings = [];
 
-  setMesh() {
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.x = 6;
-    // this.mesh.receiveShadow = true;
-    this.scene.add(this.mesh);
-  }
+    for (let i = 0; i < this.positionsArray.length; i++) {
+      const position = new THREE.Vector3(...this.positionsArray[i]);
 
-  update() {
-    this.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
-    //  this.animation.mixer.update(this.time.delta * 0.001)
+      const building = new Building(position);
+      this.buildings.push(building);
+    }
   }
 }

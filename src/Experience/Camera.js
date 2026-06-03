@@ -11,13 +11,10 @@ export default class Camera {
     this.canvas = this.experience.canvas;
     this.debug = this.experience.debug;
 
-    this.currentPositionIndex = 0;
-    this.cameraPositions = [
-      new THREE.Vector3(0, 4, 10),
-      new THREE.Vector3(10, 4, 0),
-      new THREE.Vector3(0, 4, -10),
-      new THREE.Vector3(-10, 4, 0),
-    ];
+    this.initialPosition = new THREE.Vector3(0, 4, 10);
+    this.currentPosition = this.initialPosition.clone();
+    this.radius = 10;
+    this.incrementAngle = (2 * Math.PI) / 8; // 8 positions around the circle
 
     this.cameraTopPosition = new THREE.Vector3(0, 20, 0);
 
@@ -26,8 +23,12 @@ export default class Camera {
 
       const debugObject = {
         rotateCamera: () => {
-          this.currentPositionIndex = (this.currentPositionIndex + 1) % this.cameraPositions.length;
-          const newPosition = this.cameraPositions[this.currentPositionIndex];
+          const newPosition = this.currentPosition.clone();
+          const angle = Math.atan2(newPosition.z, newPosition.x) + this.incrementAngle;
+          newPosition.x = this.radius * Math.cos(angle);
+          newPosition.z = this.radius * Math.sin(angle);
+          this.currentPosition.copy(newPosition);
+
           gsap.to(this.instance.position, {
             x: newPosition.x,
             y: newPosition.y,
@@ -36,8 +37,6 @@ export default class Camera {
           });
         },
         moveCameraUp: () => {
-          this.currentPositionIndex = (this.currentPositionIndex + 1) % this.cameraPositions.length;
-
           gsap.to(this.instance.position, {
             x: this.cameraTopPosition.x,
             y: this.cameraTopPosition.y,
@@ -56,7 +55,8 @@ export default class Camera {
 
   setInstance() {
     this.instance = new THREE.PerspectiveCamera(35, this.sizes.width / this.sizes.height, 0.1, 100);
-    this.instance.position.copy(this.cameraPositions[this.currentPositionIndex]);
+    // this.instance.position.copy(this.cameraPositions[this.currentPositionIndex]);
+    this.instance.position.copy(this.initialPosition);
     this.scene.add(this.instance);
   }
 

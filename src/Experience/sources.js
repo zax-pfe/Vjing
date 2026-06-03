@@ -21,16 +21,37 @@ export default [
     type: "texture",
     path: "textures/dirt/normal.jpg",
   },
+
+  // _______________ GLB MODELS _______________//
+  // {
+  //   name: "foxModel",
+  //   type: "gltfModel",
+  //   path: "models/Fox/glTF/Fox.gltf",
+  // },
+  // {
+  //   name: "mur_chrysler",
+  //   type: "gltfModel",
+  //   path: "models/Mur_Chrysler/Mur_Chrysler.glb",
+  // },
+  // {
+  //   name: "mur_chrysler3",
+  //   type: "gltfModel",
+  //   path: "models/Mur_Chrysler/Mur_Chrysler3.glb",
+  // },
+
   {
-    name: "foxModel",
+    name: "tour_chrysler",
     type: "gltfModel",
-    path: "models/Fox/glTF/Fox.gltf",
+    path: "models/TourChrysler/Tour_Chrysler.glb",
   },
   {
-    name: "mur_chrysler",
+    name: "route",
     type: "gltfModel",
-    path: "models/Mur_Chrysler/Mur_Chrysler.glb",
+    path: "models/route/Route.glb",
   },
+
+  // _______________ TEXTURES _______________//
+
   {
     name: "paletteTexture",
     type: "texture",
@@ -52,5 +73,27 @@ export default [
     name: "motif1",
     type: "texture",
     path: "images/motifs/motif1.png",
+  },
+
+  // _______________ MASK _______________//
+  {
+    name: "revealMask",
+    type: "texture",
+    path: "images/masks/revealMask.jpg",
+  },
+  {
+    name: "motifMask",
+    type: "texture",
+    path: "images/masks/motifMask.png",
+  },
+  {
+    name: "motifMaskBaked",
+    type: "texture",
+    path: "images/masks/motifMaskBaked.png",
+  },
+  {
+    name: "routeMaskBaked",
+    type: "texture",
+    path: "images/masks/routeMaskBaked.png",
   },
 ];

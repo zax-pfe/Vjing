@@ -12,7 +12,7 @@ export default class GradientPlane {
     this.debug = this.experience.debug;
 
     // variables
-    this.speed = 1;
+    this.speed = 3.0;
 
     // Debug
     if (this.debug.active) {
@@ -27,7 +27,7 @@ export default class GradientPlane {
   }
 
   setGeometry() {
-    this.geometry = new THREE.PlaneGeometry(1, 3, 1);
+    this.geometry = new THREE.PlaneGeometry(0.1, 3, 1);
   }
 
   setTextures() {}

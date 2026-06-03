@@ -22,9 +22,9 @@ export default class Renderer {
 
     // Bloom
 
-    this.bloom_strength = 0.4;
-    this.bloom_threshold = 0.1;
-    this.bloom_radius = 0.9;
+    this.bloom_strength = 1.5;
+    this.bloom_threshold = 0.4;
+    this.bloom_radius = 0.85;
 
     // Debug
     if (this.debug.active) {
@@ -39,9 +39,9 @@ export default class Renderer {
     this.renderPass = new RenderPass(this.scene, this.camera.instance);
     this.composer.addPass(this.renderPass);
 
-    // this.setUnrealBloom();
+    this.setUnrealBloom();
     // this.setBloom();
-    this.setCustomPass();
+    // this.setCustomPass();
   }
 
   setCustomPass() {
@@ -61,9 +61,11 @@ export default class Renderer {
   }
 
   setUnrealBloom() {
-    this.debugFolder.add(this, "bloom_strength", 0, 3, 0.01);
-    this.debugFolder.add(this, "bloom_threshold", 0, 1, 0.01);
-    this.debugFolder.add(this, "bloom_radius", 0, 1, 0.01);
+    if (this.debug.active) {
+      this.debugFolder.add(this, "bloom_strength", 0, 3, 0.01);
+      this.debugFolder.add(this, "bloom_threshold", 0, 1, 0.01);
+      this.debugFolder.add(this, "bloom_radius", 0, 1, 0.01);
+    }
 
     const resolution = new THREE.Vector2(this.sizes.width, this.sizes.height);
     this.unrealBloomPass = new UnrealBloomPass(
@@ -106,10 +108,10 @@ export default class Renderer {
       this.composer.render();
     }
 
-    if (this.bloomPass) {
-      this.bloomPass.strength = this.bloom_strength;
-      this.bloomPass.radius = this.bloom_radius;
-      this.bloomPass.threshold = this.bloom_threshold;
+    if (this.unrealBloomPass) {
+      this.unrealBloomPass.strength = this.bloom_strength;
+      this.unrealBloomPass.radius = this.bloom_radius;
+      this.unrealBloomPass.threshold = this.bloom_threshold;
     }
   }
 }
