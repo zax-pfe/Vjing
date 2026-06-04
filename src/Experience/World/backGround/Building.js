@@ -52,21 +52,24 @@ export default class Building extends EventEmitter {
     // faire un array de taille entre 1 et 2 pour chaque box
     this.setRandomSizes();
 
-    if (this.debug.active) {
-      // this.setDebug();
-    }
-
     this.setMaterial();
     this.setMesh();
 
     this.listenKick = true;
     this.listenKickTimeout = 10;
     this.timeCounter = 0;
+    this.kickLight = 1;
     //prend une liste de points aléatoire
     // pour chaque point, créer une box
     // au debut prend un point et créer une box
     // créer 3 autre box, qui seront dans la grosses
     // mettre le tout dans un group et le group dans la scene
+
+    this.sound = this.experience.sound;
+    this.sound.on("kick", () => {
+      this.onBeat();
+      this.kickLight = 4.5;
+    });
   }
 
   setMaterial(revealMask, offSetShader) {
@@ -77,6 +80,8 @@ export default class Building extends EventEmitter {
         uRevealMask: { value: revealMask },
         uTime: { value: 0 },
         uOffSet: { value: offSetShader },
+        uVolume: { value: 0 },
+        uKick: { value: 0 },
       },
     });
 
@@ -135,7 +140,7 @@ export default class Building extends EventEmitter {
 
     if (this.buildingStatus === 0) {
       const random = Math.random();
-      if (random < 0.7) {
+      if (random < 0.9) {
         this.buildingStatus = this.buildingStatus + 1;
 
         gsap.to(this.group.children[1].position, {
@@ -145,7 +150,7 @@ export default class Building extends EventEmitter {
       }
     } else if (this.buildingStatus === this.buildingStatusMax) {
       const random = Math.random();
-      if (random < 0.5) {
+      if (random < 0.9) {
         gsap.to(this.group.children[this.buildingStatus].position, {
           y: 0,
           duration: this.animationDuration,
@@ -185,21 +190,13 @@ export default class Building extends EventEmitter {
       building.traverse((obj) => {
         if (obj.isMesh && obj.material && obj.material.uniforms && obj.material.uniforms.uTime) {
           obj.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+          obj.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+          if (this.kickLight > 1) {
+            this.kickLight -= this.experience.time.delta * 0.003;
+          }
+          obj.material.uniforms.uKick.value = this.kickLight;
         }
       });
     });
-    // console.log(" update building ", this.experience.sound.kickHard);
-    if (this.listenKick && this.experience.sound.kick > 0.9) {
-      this.onBeat();
-      this.listenKick = false;
-    }
-
-    if (!this.listenKick) {
-      this.timeCounter += this.experience.time.delta;
-      if (this.timeCounter > this.listenKickTimeout) {
-        this.listenKick = true;
-        this.timeCounter = 0;
-      }
-    }
   }
 }

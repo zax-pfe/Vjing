@@ -162,8 +162,13 @@ export default [
 
   // _______________ MASK CHRYSLER TOWER _______________//
   {
-    name: "motifMaskBaked",
+    name: "murLumiere",
     type: "texture",
-    path: "images/masks/motifMaskBaked.png",
+    path: "images/masks/chryslerTower/murLumiere.png",
+  },
+  {
+    name: "Ornement",
+    type: "texture",
+    path: "images/masks/chryslerTower/Ornement.png",
   },
 ];

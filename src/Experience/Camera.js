@@ -2,10 +2,13 @@ import * as THREE from "three";
 import Experience from "./Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
+import EventEmitter from "./Utils/EventEmitter.js";
 
-export default class Camera {
+export default class Camera extends EventEmitter {
   constructor() {
+    super();
     this.experience = new Experience();
+    // this.renderer = this.experience.renderer;
     this.sound = this.experience.sound;
 
     this.sizes = this.experience.sizes;
@@ -13,13 +16,13 @@ export default class Camera {
     this.canvas = this.experience.canvas;
     this.debug = this.experience.debug;
     this.cameraIsTop = false;
-    this.initialPosition = new THREE.Vector3(0, 4, 10);
+    this.initialPosition = new THREE.Vector3(0, 8, 10);
     this.currentPosition = this.initialPosition.clone();
-    this.radius = 10;
-    this.incrementAngle = (2 * Math.PI) / 15; // 15 positions around the circle
+    this.radius = 18;
+    this.incrementAngle = (2 * Math.PI) / 8; // 15 positions around the circle
     this.topAngle = 0; // angle de rotation en vue du dessus
 
-    this.cameraTopPosition = new THREE.Vector3(0, 20, 0);
+    this.cameraTopPosition = new THREE.Vector3(0, 30, 0);
 
     this.listenKick = true;
     this.listenKickTimeout = 100;
@@ -44,6 +47,22 @@ export default class Camera {
 
     this.setInstance();
     this.setControls();
+
+    this.transitioning = false;
+
+    this.sound.on("kickHard", () => {
+      if (this.transitioning) return;
+      this.onBeat();
+    });
+  }
+
+  setRenderer() {
+    console.log("Camera received setRenderer event");
+    this.renderer = this.experience.renderer;
+    this.experience.renderer.on("transition_complete", () => {
+      this.transitioning = true;
+      this.moveUp();
+    });
   }
 
   onBeat() {
@@ -60,7 +79,7 @@ export default class Camera {
       gsap.to(this.controls.target, {
         x: lookAtTarget.x,
         z: lookAtTarget.z,
-        duration: 0.8,
+        duration: 0.2,
         onUpdate: () => {
           this.controls.update();
         },
@@ -80,26 +99,30 @@ export default class Camera {
         x: newPosition.x,
         y: newPosition.y,
         z: newPosition.z,
-        duration: 0.8,
+        duration: 0.2,
       });
     }
   }
 
   moveUp() {
+    gsap.killTweensOf(this.instance.position);
+    gsap.killTweensOf(this.controls.target);
     if (!this.cameraIsTop) {
       // Monter en vue du dessus
       gsap.to(this.instance.position, {
         x: this.cameraTopPosition.x,
         y: this.cameraTopPosition.y,
         z: this.cameraTopPosition.z,
-        duration: 0.2,
+        duration: 0.1,
         onUpdate: () => {
           this.instance.lookAt(0, 0, 0);
         },
         onComplete: () => {
+          this.transitioning = false;
           this.cameraIsTop = true;
           this.controls.target.set(0, 0, 0);
           this.topAngle = 0;
+          this.onBeat(); // pour réinitialiser la position de la cible de regard
         },
       });
     } else {
@@ -108,11 +131,12 @@ export default class Camera {
         x: this.currentPosition.x,
         y: this.currentPosition.y,
         z: this.currentPosition.z,
-        duration: 0.2,
+        duration: 0.1,
         onUpdate: () => {
           this.instance.lookAt(0, 0, 0);
         },
         onComplete: () => {
+          this.transitioning = false;
           this.cameraIsTop = false;
           this.controls.target.set(0, 0, 0);
         },
@@ -129,6 +153,7 @@ export default class Camera {
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
+    this.controls.target.set(0, 4, 0);
     this.controls.enableDamping = true;
   }
 
@@ -140,18 +165,5 @@ export default class Camera {
   update() {
     this.controls.update();
     // console.log(this.instance.position);
-
-    if (this.listenKick && this.sound.kick > 0.6) {
-      this.listenKick = false;
-      // this.onBeat();
-    }
-
-    if (!this.listenKick) {
-      this.timeCounter += this.experience.time.delta;
-      if (this.timeCounter > this.listenKickTimeout) {
-        this.listenKick = true;
-        this.timeCounter = 0;
-      }
-    }
   }
 }

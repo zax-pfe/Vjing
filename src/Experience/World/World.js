@@ -20,6 +20,7 @@ export default class World {
     this.resources.on("ready", () => {
       // Setup
       this.experience.renderer.setPostProcessing();
+      this.experience.camera.setRenderer();
 
       this.chryslerTower = new ChryslerTower();
       this.buildingsBackground = new BuildingsBackground();

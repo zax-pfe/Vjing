@@ -19,14 +19,14 @@ float intensity = mask.r;
   intensity = 1.0 - intensity;
 intensity *= 0.6;
 
-  // float wave = mod(uTime, 1.0) * 0.8 + 0.2;
-  // float wave = sin(uTime *1.0) * 0.4 + 0.5;
-  // wave = 1.0- wave +0.1;
 
-      float speed = 0.3; // ajuste la vitesse ici
-float wave = abs(fract(uTime * speed) * 2.0 - 1.0);
-// float wave = pow(fract(uTime * speed), 1.5); 
-wave = 1.0-  wave;
+  // float speed = 0.5; // ajuste la vitesse ici
+  // float wave = abs(fract(uTime * speed) * 2.0 - 1.0); // valeur entre 
+  // wave = 1.0-  wave;
+
+float speed = 0.5;
+float wave = fract(uTime * speed) * 0.67;
+// float wave = 0.01;
 
   float thickness = 0.06;
 
@@ -48,7 +48,7 @@ wave = 1.0-  wave;
 
   // 7. couleur finale (mix propre)
   vec3 color = mix(baseColor, energyColor, glow);
-   color *= 5.0 * uVolume;
+   color *= 3.0 * uVolume;
 
   gl_FragColor = vec4(color, 1.0);
 

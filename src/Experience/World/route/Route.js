@@ -19,6 +19,12 @@ export default class Route extends EventEmitter {
     this.model = this.resource.scene;
     this.children = this.model.children;
 
+    this.kickLight = 1;
+
+    this.sound.on("kickHard", () => {
+      this.kickLight = 6.5;
+    });
+
     if (this.debug.active) {
       this.setDebug();
     }
@@ -42,6 +48,7 @@ export default class Route extends EventEmitter {
         uSpeed: { value: 1.0 },
         uRevealMask: { value: this.routeMask },
         uVolume: { value: 0 },
+        uKick: { value: 0 },
       },
       // transparent: true,
     });
@@ -54,6 +61,12 @@ export default class Route extends EventEmitter {
   update() {
     this.route.material.uniforms.uTime.value = this.experience.time.elapsed * 0.001;
     this.route.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+
+    if (this.kickLight > 1) {
+      this.kickLight -= this.experience.time.delta * 0.006;
+    }
+    this.route.material.uniforms.uKick.value = this.kickLight;
+
     // console.log("volume route ", this.sound.volumeSmooth);
   }
 }

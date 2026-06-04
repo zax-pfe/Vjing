@@ -7,8 +7,8 @@ import fragment from "../shaders/boxMotifs/fragment.glsl";
 import motif_vertex from "../shaders/ChryslerTower/Motifs/vertex.glsl";
 import motif_fragment from "../shaders/ChryslerTower/Motifs/fragment.glsl";
 
-import cube_vertex from "../shaders/ChryslerTower/Cube/vertex.glsl";
-import cube_fragment from "../shaders/ChryslerTower/Cube/fragment.glsl";
+import ornement_vertex from "../shaders/ChryslerTower/Ornement/vertex.glsl";
+import ornement_fragment from "../shaders/ChryslerTower/Ornement/fragment.glsl";
 
 import gsap from "gsap";
 
@@ -24,7 +24,8 @@ export default class ChryslerTower {
 
     this.resource = this.resources.items.tour_chrysler2;
 
-    this.motifMask = this.resources.items.motifMaskBaked;
+    this.motifMask = this.resources.items.murLumiere;
+    this.ornementMask = this.resources.items.Ornement;
 
     this.modelScale = 2;
 
@@ -33,6 +34,10 @@ export default class ChryslerTower {
     if (this.debug.active) {
       this.setDebug();
     }
+
+    this.sound.on("kick", () => {
+      this.onBeat();
+    });
   }
 
   setDebug() {
@@ -73,6 +78,7 @@ export default class ChryslerTower {
     this.model.position.set(0, 1, 0);
     this.setMurLumiere();
     this.setOrnementTour();
+    this.setPique();
     this.setCube();
     this.setTop();
     this.model.scale.set(this.modelScale, this.modelScale, this.modelScale);
@@ -104,6 +110,22 @@ export default class ChryslerTower {
       uniforms: {
         uTime: { value: 0 },
         uSpeed: { value: this.speed },
+        uRevealMask: { value: this.ornementMask },
+        uVolume: { value: 0 },
+      },
+    });
+  }
+
+  setPique() {
+    this.pique = this.children[4];
+    console.log("pique ", this.pique);
+
+    this.pique.material = new THREE.ShaderMaterial({
+      vertexShader: motif_vertex,
+      fragmentShader: motif_fragment,
+      uniforms: {
+        uTime: { value: 0 },
+        uSpeed: { value: this.speed },
         uRevealMask: { value: this.motifMask },
         uVolume: { value: 0 },
       },
@@ -129,10 +151,15 @@ export default class ChryslerTower {
 
   update() {
     this.murLumiere.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    this.ornementTour.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    this.pique.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
     this.murLumiere.material.uniforms.uVolume.value = this.sound.volumeSmooth;
-    if (this.sound.kickHard > 0.9) {
-      this.onBeat();
-    }
+    this.ornementTour.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    this.pique.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+
+    // if (this.sound.kick > 0.9) {
+    //   this.onBeat();
+    // }
     // console.log("volume ", this.sound.volumeByFrequency);
   }
 }

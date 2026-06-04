@@ -5,13 +5,17 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { BloomPass } from "three/addons/postprocessing/BloomPass.js";
+import gsap from "gsap";
+import EventEmitter from "./Utils/EventEmitter.js";
 
 import vertex from "./shaders/postProcessing/vertex.glsl";
 import fragment from "./shaders/postProcessing/fragment.glsl";
 
-export default class Renderer {
+export default class Renderer extends EventEmitter {
   constructor() {
+    super();
     this.experience = new Experience();
+    this.sound = this.experience.sound;
     this.canvas = this.experience.canvas;
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
@@ -37,6 +41,29 @@ export default class Renderer {
     }
 
     this.setInstance();
+
+    this.timeline = gsap.timeline({ paused: true });
+
+    this.timeline.to(this, {
+      noiseStrengthRatio: 1,
+      duration: 1,
+      ease: "power2.in",
+      onComplete: () => {
+        this.trigger("transition_complete");
+      },
+    });
+
+    this.timeline.to(this, {
+      noiseStrengthRatio: 0,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+
+    this.sound.on("transition_top", () => {
+      // this.setPostProcessing();
+      console.log("transition in renderer");
+      this.timeline.restart();
+    });
   }
 
   setPostProcessing() {

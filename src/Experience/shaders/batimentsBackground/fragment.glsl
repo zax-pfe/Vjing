@@ -4,6 +4,8 @@ varying vec3 vPosition;
 uniform sampler2D uRevealMask;
 uniform float uTime;
 uniform float uOffSet;
+uniform float uVolume;
+uniform float uKick;
 
 void main()
 {
@@ -49,7 +51,7 @@ intensity *= 6.0;
 
   // 7. couleur finale (mix propre)
   vec3 color = mix(baseColor, energyColor, glow);
-   color *= 2.0;
+   color *= 2.0 * uVolume * uKick;
 
   gl_FragColor = vec4(color, 1.0);
 

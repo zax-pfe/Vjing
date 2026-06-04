@@ -5,6 +5,7 @@ uniform float uTime;
 uniform float uSpeed;
 uniform sampler2D uRevealMask;
 uniform float uVolume;
+uniform float uKick;
 
 
 
@@ -26,7 +27,7 @@ intensity *= 0.6;
   // float wave = sin(uTime *1.0) * 0.4 + 0.5;
   // wave = 1.0- wave +0.1;
 
-    float speed = 0.4; // ajuste la vitesse ici
+    float speed = 0.1; // ajuste la vitesse ici
 float wave = fract(uTime * speed);
 wave = 1.0 - wave; // Inverse la direction de l'animation
 // float wave = pow(fract(uTime * speed), 1.5); 
@@ -53,6 +54,7 @@ wave = 1.0 - wave; // Inverse la direction de l'animation
   vec3 color = mix(baseColor, energyColor, glow);
    color *= 3.0 ;
    color *= uVolume;
+   color *= uKick;
 
   gl_FragColor = vec4(color, 1.0);
 
