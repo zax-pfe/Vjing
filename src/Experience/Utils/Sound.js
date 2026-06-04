@@ -9,6 +9,9 @@ export default class Sound extends EventEmitter {
     this.experience = new Experience();
     this.debug = this.experience.debug;
 
+    this.kickHardBeforeTransition = 8;
+    this.currentKickHard = 0;
+
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder("sound");
       const debugObject = {
@@ -43,6 +46,13 @@ export default class Sound extends EventEmitter {
       if (!this.readKickHard) return;
       this.trigger("kickHard");
       this.readKickHard = false;
+      this.currentKickHard++;
+      if (this.currentKickHard >= this.kickHardBeforeTransition) {
+        // this.trigger("transition_top");
+        console.log("transition_top event triggered from AnalyzerDebug");
+        this.currentKickHard = 0;
+      }
+
       setTimeout(() => {
         this.readKickHard = true;
       }, 400);
@@ -55,15 +65,6 @@ export default class Sound extends EventEmitter {
     this.kickHard = 0;
     this.volumeByFrequency = this.analyzer.volumeByFrequency;
 
-    // calcul du BPM
-    this.bpm = 0;
-    this.timeElapsed = 0;
-    this.beatCount = 0;
-    this.lastBeatTime = 0;
-    // calcule le kick que sur les montée
-    this.previousKickHard = 0;
-    this.currentKickHard = 0;
-
     // L'analyzer met ces valeurs à jour à chaque frame
     this.analyzer.onAudio((a) => {
       this.volume = a.volume;
@@ -74,36 +75,7 @@ export default class Sound extends EventEmitter {
     });
   }
 
-  calculateBPM() {
-    this.timeElapsed += this.time.delta;
-
-    const threshold = 0.8;
-
-    // Détection du front montant
-    if (!this.isKickActive && this.kickHard > threshold) {
-      this.isKickActive = true;
-      this.beatCount++;
-
-      console.log("Beat détecté !", this.beatCount);
-    }
-
-    // Réarmement quand le kick redescend
-    if (this.isKickActive && this.kickHard < threshold * 0.5) {
-      this.isKickActive = false;
-    }
-
-    if (this.timeElapsed > 7000) {
-      this.bpm = (this.beatCount / 7) * 60;
-
-      console.log("BPM :", this.bpm);
-
-      this.beatCount = 0;
-      this.timeElapsed = 0;
-    }
-  }
-
   update() {
-    // this.calculateBPM();
     if (this.kick === 0.97) {
       console.log("kick ", this.kick);
     }
