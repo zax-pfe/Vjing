@@ -4,6 +4,7 @@ varying vec3 vNormal;
 uniform float uTime;
 uniform float uSpeed;
 uniform sampler2D uRevealMask;
+uniform float uVolume;
 
 
 
@@ -50,7 +51,8 @@ wave = 1.0 - wave; // Inverse la direction de l'animation
 
   // 7. couleur finale (mix propre)
   vec3 color = mix(baseColor, energyColor, glow);
-   color *= 2.0;
+   color *= 3.0 ;
+   color *= uVolume;
 
   gl_FragColor = vec4(color, 1.0);
 

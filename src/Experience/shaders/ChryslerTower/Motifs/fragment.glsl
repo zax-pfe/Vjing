@@ -3,6 +3,7 @@ varying vec3 vNormal;
 varying vec3 vPosition;
 uniform sampler2D uRevealMask;
 uniform float uTime;
+uniform float uVolume;
 
 void main()
 {
@@ -22,7 +23,7 @@ intensity *= 0.6;
   // float wave = sin(uTime *1.0) * 0.4 + 0.5;
   // wave = 1.0- wave +0.1;
 
-      float speed = 0.2; // ajuste la vitesse ici
+      float speed = 0.3; // ajuste la vitesse ici
 float wave = abs(fract(uTime * speed) * 2.0 - 1.0);
 // float wave = pow(fract(uTime * speed), 1.5); 
 wave = 1.0-  wave;
@@ -47,7 +48,7 @@ wave = 1.0-  wave;
 
   // 7. couleur finale (mix propre)
   vec3 color = mix(baseColor, energyColor, glow);
-   color *= 4.0;
+   color *= 5.0 * uVolume;
 
   gl_FragColor = vec4(color, 1.0);
 

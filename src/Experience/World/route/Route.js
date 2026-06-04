@@ -9,6 +9,7 @@ export default class Route extends EventEmitter {
   constructor() {
     super();
     this.experience = new Experience();
+    this.sound = this.experience.sound;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.debug = this.experience.debug;
@@ -16,9 +17,7 @@ export default class Route extends EventEmitter {
     this.routeMask = this.resources.items.routeMaskBaked;
 
     this.model = this.resource.scene;
-    console.log("model route ", this.model);
     this.children = this.model.children;
-    console.log("children route ", this.children);
 
     if (this.debug.active) {
       this.setDebug();
@@ -35,7 +34,6 @@ export default class Route extends EventEmitter {
 
   setMaterial() {
     this.route = this.children[0];
-    console.log("mask route ", this.routeMask);
     this.route.material = new THREE.ShaderMaterial({
       vertexShader: vertex,
       fragmentShader: fragment,
@@ -43,6 +41,7 @@ export default class Route extends EventEmitter {
         uTime: { value: 0 },
         uSpeed: { value: 1.0 },
         uRevealMask: { value: this.routeMask },
+        uVolume: { value: 0 },
       },
       // transparent: true,
     });
@@ -54,5 +53,7 @@ export default class Route extends EventEmitter {
 
   update() {
     this.route.material.uniforms.uTime.value = this.experience.time.elapsed * 0.001;
+    this.route.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    // console.log("volume route ", this.sound.volumeSmooth);
   }
 }

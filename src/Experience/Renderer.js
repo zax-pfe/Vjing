@@ -26,6 +26,11 @@ export default class Renderer {
     this.bloom_threshold = 0.4;
     this.bloom_radius = 0.85;
 
+    // Noise
+    this.noiseStrengthRatio = 0.0;
+    this.noiseStrength = 20.5;
+    this.noiseScale = 0.05;
+
     // Debug
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder("renderer");
@@ -39,19 +44,27 @@ export default class Renderer {
     this.renderPass = new RenderPass(this.scene, this.camera.instance);
     this.composer.addPass(this.renderPass);
 
+    this.setCustomPass();
     this.setUnrealBloom();
     // this.setBloom();
-    // this.setCustomPass();
   }
 
   setCustomPass() {
     this.resources = this.experience.resources;
-    this.palette = this.resources.items.paletteTexture3;
+
+    if (this.debug.active) {
+      this.debugFolder.add(this, "noiseStrength", 1, 25, 1);
+      this.debugFolder.add(this, "noiseStrengthRatio", 0, 1, 0.01);
+      this.debugFolder.add(this, "noiseScale", 0, 1, 0.01);
+    }
 
     this.customPass = new ShaderPass({
       uniforms: {
         tDiffuse: { value: null },
-        uPalette: { value: this.palette },
+        uStrength: { value: this.noiseStrength },
+        uStrengthRatio: { value: this.noiseStrengthRatio },
+        uScale: { value: this.noiseScale },
+        uTime: { value: 0 },
       },
       vertexShader: vertex,
       fragmentShader: fragment,
@@ -63,7 +76,7 @@ export default class Renderer {
   setUnrealBloom() {
     if (this.debug.active) {
       this.debugFolder.add(this, "bloom_strength", 0, 3, 0.01);
-      this.debugFolder.add(this, "bloom_threshold", 0, 1, 0.01);
+      this.debugFolder.add(this, "bloom_threshold", 0, 3, 0.01);
       this.debugFolder.add(this, "bloom_radius", 0, 1, 0.01);
     }
 
@@ -108,6 +121,12 @@ export default class Renderer {
       this.composer.render();
     }
 
+    if (this.customPass) {
+      this.customPass.uniforms.uStrength.value = this.noiseStrength;
+      this.customPass.uniforms.uStrengthRatio.value = this.noiseStrengthRatio;
+      this.customPass.uniforms.uScale.value = this.noiseScale;
+      // this.customPass.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    }
     if (this.unrealBloomPass) {
       this.unrealBloomPass.strength = this.bloom_strength;
       this.unrealBloomPass.radius = this.bloom_radius;

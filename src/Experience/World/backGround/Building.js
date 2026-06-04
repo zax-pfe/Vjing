@@ -9,6 +9,7 @@ export default class Building extends EventEmitter {
   constructor(position, offSetShader) {
     super();
     this.experience = new Experience();
+
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.revealMask = this.resources.items.backgroundBuildingMaskBaked;
@@ -42,7 +43,6 @@ export default class Building extends EventEmitter {
     this.position = position;
     this.debug = this.experience.debug;
     this.offSetShader = offSetShader;
-    console.log("offSetShader", this.offSetShader);
     this.buildingStatus = 0;
     this.buildingStatusMax = 3;
     this.buildingMaxHeight = 6;
@@ -59,6 +59,9 @@ export default class Building extends EventEmitter {
     this.setMaterial();
     this.setMesh();
 
+    this.listenKick = true;
+    this.listenKickTimeout = 10;
+    this.timeCounter = 0;
     //prend une liste de points aléatoire
     // pour chaque point, créer une box
     // au debut prend un point et créer une box
@@ -66,36 +69,32 @@ export default class Building extends EventEmitter {
     // mettre le tout dans un group et le group dans la scene
   }
 
-  setMaterial() {
-    this.material = new THREE.ShaderMaterial({
+  setMaterial(revealMask, offSetShader) {
+    const material = new THREE.ShaderMaterial({
       vertexShader: vertex,
       fragmentShader: fragment,
       uniforms: {
-        uRevealMask: { value: this.revealMask },
+        uRevealMask: { value: revealMask },
         uTime: { value: 0 },
+        uOffSet: { value: offSetShader },
       },
     });
+
+    return material;
   }
 
   setModel(index) {
     this.model = this.backBuildingList[index % this.backBuildingList.length].scene;
     this.backgroundBuildings = this.model.children[0].children;
-    console.log("model", this.backgroundBuildings);
     this.model.scale.set(1 - 0.15 * index, 1 - 0.15 * index, 1 - 0.15 * index);
     this.backgroundBuildings[0].material = new THREE.MeshBasicMaterial({
       color: new THREE.Color(0, 0, 0),
     });
-    this.backgroundBuildings[1].material = new THREE.ShaderMaterial({
-      vertexShader: vertex,
-      fragmentShader: fragment,
-      uniforms: {
-        uRevealMask: {
-          value: this.backBuildingTextureList[index % this.backBuildingTextureList.length],
-        },
-        uTime: { value: 0 },
-        uOffSet: { value: this.offSetShader },
-      },
-    });
+
+    this.backgroundBuildings[1].material = this.setMaterial(
+      this.backBuildingTextureList[index % this.backBuildingTextureList.length],
+      this.offSetShader,
+    );
 
     const building = this.model.clone();
     return building;
@@ -138,7 +137,6 @@ export default class Building extends EventEmitter {
       const random = Math.random();
       if (random < 0.7) {
         this.buildingStatus = this.buildingStatus + 1;
-        console.log("push first building", this.buildingStatus);
 
         gsap.to(this.group.children[1].position, {
           y: this.animHeight,
@@ -158,7 +156,6 @@ export default class Building extends EventEmitter {
       const random = Math.random();
       if (random < 0.5) {
         this.buildingStatus = this.buildingStatus + 1;
-        console.log("push up  building", this.buildingStatus);
         gsap.to(this.group.children[this.buildingStatus].position, {
           y: this.animHeight * this.buildingStatus,
           duration: this.animationDuration,
@@ -191,5 +188,18 @@ export default class Building extends EventEmitter {
         }
       });
     });
+    // console.log(" update building ", this.experience.sound.kickHard);
+    if (this.listenKick && this.experience.sound.kick > 0.9) {
+      this.onBeat();
+      this.listenKick = false;
+    }
+
+    if (!this.listenKick) {
+      this.timeCounter += this.experience.time.delta;
+      if (this.timeCounter > this.listenKickTimeout) {
+        this.listenKick = true;
+        this.timeCounter = 0;
+      }
+    }
   }
 }

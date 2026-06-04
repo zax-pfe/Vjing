@@ -1,5 +1,6 @@
 import restart from "vite-plugin-restart";
 import glsl from "vite-plugin-glsl";
+import vjTracksPlugin from "./vite-plugin-vj-tracks.js";
 
 export default {
   root: "src/", // Sources files (typically where index.html is)
@@ -16,5 +17,6 @@ export default {
   plugins: [
     restart({ restart: ["../static/**"] }), // Restart server on static file change
     glsl(),
+    vjTracksPlugin(),
   ],
 };
