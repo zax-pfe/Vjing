@@ -22,8 +22,13 @@ void main()
   intensity = 1.0 - intensity;
 intensity *= 0.6;
 
-  float wave = sin(uTime *1.0) * 0.4 + 0.5;
-  wave = 1.0- wave +0.1;
+  // float wave = sin(uTime *1.0) * 0.4 + 0.5;
+  // wave = 1.0- wave +0.1;
+
+    float speed = 0.4; // ajuste la vitesse ici
+float wave = fract(uTime * speed);
+wave = 1.0 - wave; // Inverse la direction de l'animation
+// float wave = pow(fract(uTime * speed), 1.5); 
 
    float thickness = 0.06;
 

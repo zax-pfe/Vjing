@@ -15,13 +15,25 @@ export default class BuildingsBackground extends EventEmitter {
     if (this.debug.active) {
       this.setDebug();
     }
+    this.ressource = this.resources.items.cube_loca;
 
-    this.positionsArray = [
-      [0, 0, 5],
-      [3, 0, 5],
-      [-3, 0, 5],
-    ];
+    // this.positionsArray = [
+    //   [0, 0, 5],
+    //   [3, 0, 5],
+    //   [-3, 0, 5],
+    // ];
+    this.setPositions();
     this.setBuildings();
+  }
+
+  setPositions() {
+    this.positionsArray = [];
+    this.childrens = this.ressource.scene.children;
+    this.childrens.forEach((child) => {
+      this.positionsArray.push([child.position.x, child.position.y, child.position.z]);
+    });
+    // this.positionsArray = this.positionsArray[0];
+    // this.positionsArray = [[0, 0, 5]];
   }
 
   setDebug() {
@@ -47,5 +59,11 @@ export default class BuildingsBackground extends EventEmitter {
       const building = new Building(position);
       this.buildings.push(building);
     }
+  }
+
+  update() {
+    this.buildings.forEach((building) => {
+      building.update();
+    });
   }
 }

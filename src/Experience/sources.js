@@ -49,6 +49,16 @@ export default [
     type: "gltfModel",
     path: "models/route/Route.glb",
   },
+  {
+    name: "cube_loca",
+    type: "gltfModel",
+    path: "models/Cubeloca/Cube_Loca.glb",
+  },
+  {
+    name: "back_building",
+    type: "gltfModel",
+    path: "models/BackgroundBuildings/backBuilding.glb",
+  },
 
   // _______________ TEXTURES _______________//
 
@@ -95,5 +105,10 @@ export default [
     name: "routeMaskBaked",
     type: "texture",
     path: "images/masks/routeMaskBaked.png",
+  },
+  {
+    name: "backgroundBuildingMaskBaked",
+    type: "texture",
+    path: "images/masks/backgroundBuildingMaskBaked.png",
   },
 ];

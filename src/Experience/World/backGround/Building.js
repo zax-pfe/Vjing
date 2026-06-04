@@ -1,18 +1,22 @@
 import * as THREE from "three";
 import Experience from "../../Experience.js";
-import vertex from "../../shaders/round/vertex.glsl";
-import fragment from "../../shaders/round/fragment.glsl";
+import vertex from "../../shaders/batimentsBackground/vertex.glsl";
+import fragment from "../../shaders/batimentsBackground/fragment.glsl";
 import gsap from "gsap";
 import EventEmitter from "../../Utils/EventEmitter.js";
 
 export default class Building extends EventEmitter {
-  constructor(position) {
+  constructor(position, offSetShader) {
     super();
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
+    this.revealMask = this.resources.items.backgroundBuildingMaskBaked;
+    this.backBuilding = this.resources.items.back_building;
+
     this.position = position;
     this.debug = this.experience.debug;
+    this.offSetShader = offSetShader;
     this.buildingStatus = 0;
     this.buildingStatusMax = 3;
     this.animationDuration = 0.2;
@@ -39,7 +43,8 @@ export default class Building extends EventEmitter {
   setGeometry() {
     this.geometryList = [];
     this.geometry_1 = new THREE.BoxGeometry(1, this.arraySizes[0] + 0.4, 1);
-
+    // this.geometry_1 = this.backBuilding.scene.children[0].geometry;
+    // console.log("GEOMETRY", this.backBuilding.scene.children[0]);
     this.geometryList.push(this.geometry_1);
     this.geometry_2 = new THREE.BoxGeometry(0.8, this.arraySizes[1], 0.8);
     this.geometryList.push(this.geometry_2);
@@ -52,21 +57,46 @@ export default class Building extends EventEmitter {
   setTextures() {}
 
   setMaterial() {
-    this.material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(0.1, 0.0, 0.0),
+    this.material = new THREE.ShaderMaterial({
+      vertexShader: vertex,
+      fragmentShader: fragment,
+      uniforms: {
+        uRevealMask: { value: this.revealMask },
+        uTime: { value: 0 },
+      },
     });
+  }
+
+  setModel(index) {
+    this.model = this.backBuilding.scene;
+    this.backgroundBuildings = this.model.children[0].children;
+    this.model.scale.set(1 - 0.2 * index, 1 - 0.2 * index, 1 - 0.2 * index);
+    for (let i = 0; i < this.backgroundBuildings.length; i++) {
+      this.backgroundBuildings[i].material = new THREE.ShaderMaterial({
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        uniforms: {
+          uRevealMask: { value: this.revealMask },
+          uTime: { value: 0 },
+        },
+      });
+    }
+    const building = this.model.clone();
+    return building;
   }
 
   setMesh() {
     this.group = new THREE.Group();
     for (let i = 0; i < this.geometryList.length; i++) {
-      const mesh = new THREE.Mesh(this.geometryList[i], this.material);
       // mesh.position.y = i * 0.5;
-      this.group.add(mesh);
+      const building = this.setModel(i);
+      this.group.add(building);
     }
+
     this.group.position.copy(this.position);
     const randomScale = Math.random() * 0.5 + 0.75; // Scale between 0.75 and 1.25
     this.group.scale.set(randomScale, randomScale, randomScale);
+    this.group.position.y = -2;
     this.scene.add(this.group);
   }
 
@@ -88,7 +118,7 @@ export default class Building extends EventEmitter {
 
     if (this.buildingStatus === 0) {
       const random = Math.random();
-      if (random < 0.5) {
+      if (random < 0.7) {
         this.buildingStatus = this.buildingStatus + 1;
         console.log("push first building", this.buildingStatus);
 
@@ -100,8 +130,6 @@ export default class Building extends EventEmitter {
     } else if (this.buildingStatus === this.buildingStatusMax) {
       const random = Math.random();
       if (random < 0.5) {
-        console.log("push last building", this.buildingStatus);
-
         gsap.to(this.group.children[this.buildingStatus].position, {
           y: 0,
           duration: this.animationDuration,
@@ -118,7 +146,6 @@ export default class Building extends EventEmitter {
           duration: this.animationDuration,
         });
       } else {
-        console.log("push down building", this.buildingStatus);
         gsap.to(this.group.children[this.buildingStatus].position, {
           y: 0,
           duration: this.animationDuration,
@@ -138,5 +165,13 @@ export default class Building extends EventEmitter {
     this.debugFolder.add(debugObject, "pushBuilding");
   }
 
-  update() {}
+  update() {
+    this.group.children.forEach((building) => {
+      building.traverse((obj) => {
+        if (obj.isMesh && obj.material && obj.material.uniforms && obj.material.uniforms.uTime) {
+          obj.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+        }
+      });
+    });
+  }
 }

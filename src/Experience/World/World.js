@@ -10,6 +10,7 @@ import BoxMotif from "./boxMotif.js";
 import MurChrysler from "./mur_chrysler.js";
 import BuildingsBackground from "./backGround/buildingsBackground.js";
 import Route from "./route/Route.js";
+import CubeLoca from "./backGround/BuildingPosition.js";
 export default class World {
   constructor() {
     this.experience = new Experience();
@@ -30,7 +31,8 @@ export default class World {
       // this.boxMotif = new BoxMotif();
       this.murChrysler = new MurChrysler();
       // console.log(this.resources.items.motif1);
-      this.buildingsBackground = new BuildingsBackground();
+      // this.buildingsBackground = new BuildingsBackground();
+      this.cubeLoca = new CubeLoca();
       this.route = new Route();
     });
   }
@@ -41,6 +43,8 @@ export default class World {
     if (this.murChrysler) this.murChrysler.update();
     if (this.testPlane) this.testPlane.update();
     if (this.route) this.route.update();
+    if (this.buildingsBackground) this.buildingsBackground.update();
+
     // if (this.testCube) this.testCube.update();
   }
 }

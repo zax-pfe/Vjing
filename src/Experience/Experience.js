@@ -52,6 +52,8 @@ export default class Experience {
     this.renderer.resize();
   }
 
+  setDebug() {}
+
   update() {
     this.camera.update();
     this.world.update();
