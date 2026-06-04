@@ -14,7 +14,6 @@ export default class Cube {
     // console.log("vertex ", vertex);
     this.palette = this.resources.items.paletteTexture;
 
-    console.log("palette ", this.palette);
     this.coordPaletteX = 0.7;
     this.coordPaletteY = 0.1;
 
