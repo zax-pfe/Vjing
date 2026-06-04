@@ -7,6 +7,8 @@ import Camera from "./Camera.js";
 import Renderer from "./Renderer.js";
 import World from "./World/World.js";
 import Resources from "./Utils/Resources.js";
+import AnalyzerDebug from "./Utils/AnalyzerDebug.js";
+import Analyzer from "./Utils/Analyzer.js";
 
 import sources from "./sources.js";
 
@@ -35,7 +37,10 @@ export default class Experience {
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.world = new World();
+    this.audio = new Analyzer(); // auto: standalone MP3 player/mic, or the host's broadcast
 
+    this.AnalyzerDebug = new AnalyzerDebug(this.audio, { width: 160, height: 95, bins: 8 }); // opts optional
+    this.AnalyzerDebug.toggle(); // toggle visibility of the debug canvas
     // Resize event
     this.sizes.on("resize", () => {
       this.resize();

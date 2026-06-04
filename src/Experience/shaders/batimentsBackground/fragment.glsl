@@ -17,11 +17,12 @@ float intensity = mask.r;
   vec3 baseColor = vec3(0.0);
   vec3 energyColor = vec3(0.94, 0.46, 0.46);
 
-  intensity = 1.0 - intensity;
-intensity *= 0.6;
+//   intensity = 1.0 - intensity;
+intensity *= 1.6;
 
-  float wave = sin(uTime * 0.0) * 0.4 + 0.5;
-  wave = 1.0- wave +0.1;
+  float wave = sin(uTime * 2.0) * 0.4 + 0.5; // between 0 and 1 map to 0.1 and 0.9
+  wave = 0.1;
+  // wave = 1.0- wave +0.1;
 
 
 

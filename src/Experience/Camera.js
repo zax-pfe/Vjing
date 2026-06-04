@@ -10,11 +10,12 @@ export default class Camera {
     this.scene = this.experience.scene;
     this.canvas = this.experience.canvas;
     this.debug = this.experience.debug;
-
+    this.cameraIsTop = false;
     this.initialPosition = new THREE.Vector3(0, 4, 10);
     this.currentPosition = this.initialPosition.clone();
     this.radius = 10;
     this.incrementAngle = (2 * Math.PI) / 8; // 8 positions around the circle
+    this.topAngle = 0; // angle de rotation en vue du dessus
 
     this.cameraTopPosition = new THREE.Vector3(0, 20, 0);
 
@@ -23,26 +24,77 @@ export default class Camera {
 
       const debugObject = {
         rotateCamera: () => {
-          const newPosition = this.currentPosition.clone();
-          const angle = Math.atan2(newPosition.z, newPosition.x) + this.incrementAngle;
-          newPosition.x = this.radius * Math.cos(angle);
-          newPosition.z = this.radius * Math.sin(angle);
-          this.currentPosition.copy(newPosition);
+          if (this.cameraIsTop) {
+            // Vue du dessus : rotation sur elle-même autour de Y
+            this.topAngle += this.incrementAngle;
 
-          gsap.to(this.instance.position, {
-            x: newPosition.x,
-            y: newPosition.y,
-            z: newPosition.z,
-            duration: 1,
-          });
+            const lookAtTarget = new THREE.Vector3(
+              Math.cos(this.topAngle) * 0.001,
+              0,
+              Math.sin(this.topAngle) * 0.001,
+            );
+
+            gsap.to(this.controls.target, {
+              x: lookAtTarget.x,
+              z: lookAtTarget.z,
+              duration: 0.8,
+              onUpdate: () => {
+                this.controls.update();
+              },
+            });
+          } else {
+            // Vue normale : rotation autour de la scène sur X/Z
+            const angle =
+              Math.atan2(this.currentPosition.z, this.currentPosition.x) + this.incrementAngle;
+            const newPosition = new THREE.Vector3(
+              this.radius * Math.cos(angle),
+              this.currentPosition.y,
+              this.radius * Math.sin(angle),
+            );
+            this.currentPosition.copy(newPosition);
+
+            gsap.to(this.instance.position, {
+              x: newPosition.x,
+              y: newPosition.y,
+              z: newPosition.z,
+              duration: 0.8,
+            });
+          }
         },
+
         moveCameraUp: () => {
-          gsap.to(this.instance.position, {
-            x: this.cameraTopPosition.x,
-            y: this.cameraTopPosition.y,
-            z: this.cameraTopPosition.z,
-            duration: 1,
-          });
+          if (!this.cameraIsTop) {
+            // Monter en vue du dessus
+            gsap.to(this.instance.position, {
+              x: this.cameraTopPosition.x,
+              y: this.cameraTopPosition.y,
+              z: this.cameraTopPosition.z,
+              duration: 0.2,
+              onUpdate: () => {
+                this.instance.lookAt(0, 0, 0);
+              },
+              onComplete: () => {
+                this.cameraIsTop = true;
+                this.controls.target.set(0, 0, 0);
+                this.topAngle = 0;
+              },
+            });
+          } else {
+            // Redescendre à la position précédente
+            gsap.to(this.instance.position, {
+              x: this.currentPosition.x,
+              y: this.currentPosition.y,
+              z: this.currentPosition.z,
+              duration: 0.2,
+              onUpdate: () => {
+                this.instance.lookAt(0, 0, 0);
+              },
+              onComplete: () => {
+                this.cameraIsTop = false;
+                this.controls.target.set(0, 0, 0);
+              },
+            });
+          }
         },
       };
       this.debugFolder.add(debugObject, "rotateCamera");
