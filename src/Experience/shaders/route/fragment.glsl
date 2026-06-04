@@ -15,7 +15,6 @@ void main()
   vec2 uv = vUv;
   uv.y = 1.0 - uv.y;  // ← flip Y
   vec4 mask = texture2D(uRevealMask, uv);
-  // vec4 color = vec4(0.39, 0.51, 0.61, 1.0); // Couleur de base du tower
 
   float intensity = mask.r;
 
@@ -23,14 +22,9 @@ void main()
   vec3 energyColor = vec3(0.94, 0.46, 0.46);
   intensity = 1.0 - intensity;
 intensity *= 0.6;
-
-  // float wave = sin(uTime *1.0) * 0.4 + 0.5;
-  // wave = 1.0- wave +0.1;
-
-    float speed = 0.1; // ajuste la vitesse ici
+    float speed = 0.05; 
 float wave = fract(uTime * speed);
-wave = 1.0 - wave; // Inverse la direction de l'animation
-// float wave = pow(fract(uTime * speed), 1.5); 
+wave = 1.0 - wave; 
 
    float thickness = 0.06;
 
@@ -50,7 +44,6 @@ wave = 1.0 - wave; // Inverse la direction de l'animation
 
     float glow = energy * 3.0; 
 
-  // 7. couleur finale (mix propre)
   vec3 color = mix(baseColor, energyColor, glow);
    color *= 3.0 ;
    color *= uVolume;
@@ -58,7 +51,6 @@ wave = 1.0 - wave; // Inverse la direction de l'animation
 
   gl_FragColor = vec4(color, 1.0);
 
-  // gl_FragColor = vec4(mask.rgb, 1.0);
 
 
 }

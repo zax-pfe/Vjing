@@ -22,7 +22,7 @@ export default class Route extends EventEmitter {
     this.kickLight = 1;
 
     this.sound.on("kickHard", () => {
-      this.kickLight = 6.5;
+      this.kickLight = 5.5;
     });
 
     if (this.debug.active) {
@@ -63,7 +63,7 @@ export default class Route extends EventEmitter {
     this.route.material.uniforms.uVolume.value = this.sound.volumeSmooth;
 
     if (this.kickLight > 1) {
-      this.kickLight -= this.experience.time.delta * 0.006;
+      this.kickLight -= this.experience.time.delta * 0.008;
     }
     this.route.material.uniforms.uKick.value = this.kickLight;
 
