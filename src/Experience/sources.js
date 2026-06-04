@@ -59,6 +59,26 @@ export default [
     type: "gltfModel",
     path: "models/BackgroundBuildings/backBuilding.glb",
   },
+  {
+    name: "back_building1",
+    type: "gltfModel",
+    path: "models/BackgroundBuildings/Maison1.glb",
+  },
+  {
+    name: "back_building2",
+    type: "gltfModel",
+    path: "models/BackgroundBuildings/Maison2.glb",
+  },
+  {
+    name: "back_building3",
+    type: "gltfModel",
+    path: "models/BackgroundBuildings/Maison3.glb",
+  },
+  {
+    name: "back_building4",
+    type: "gltfModel",
+    path: "models/BackgroundBuildings/Maison4.glb",
+  },
 
   // _______________ TEXTURES _______________//
 
@@ -110,5 +130,26 @@ export default [
     name: "backgroundBuildingMaskBaked",
     type: "texture",
     path: "images/masks/backgroundBuildingMaskBaked.png",
+  },
+  // _______________ MASK BACKGROUND BAT _______________//
+  {
+    name: "maison1_texture",
+    type: "texture",
+    path: "models/BackgroundBuildings/textures/Forme_BAT1.png",
+  },
+  {
+    name: "maison2_texture",
+    type: "texture",
+    path: "models/BackgroundBuildings/textures/Forme_BAT2.png",
+  },
+  {
+    name: "maison3_texture",
+    type: "texture",
+    path: "models/BackgroundBuildings/textures/Forme_BAT3.png",
+  },
+  {
+    name: "maison4_texture",
+    type: "texture",
+    path: "models/BackgroundBuildings/textures/Forme_BAT4.png",
   },
 ];

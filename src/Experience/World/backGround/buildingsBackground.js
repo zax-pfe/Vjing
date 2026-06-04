@@ -55,8 +55,8 @@ export default class BuildingsBackground extends EventEmitter {
 
     for (let i = 0; i < this.positionsArray.length; i++) {
       const position = new THREE.Vector3(...this.positionsArray[i]);
-
-      const building = new Building(position);
+      const offSetShader = Math.random() * 10.0; // Random offset for shader animation
+      const building = new Building(position, offSetShader);
       this.buildings.push(building);
     }
   }
