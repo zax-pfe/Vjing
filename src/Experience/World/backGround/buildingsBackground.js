@@ -15,7 +15,7 @@ export default class BuildingsBackground extends EventEmitter {
     if (this.debug.active) {
       this.setDebug();
     }
-    this.ressource = this.resources.items.cube_loca;
+    this.ressource = this.resources.items.cube_loca2;
 
     // this.positionsArray = [
     //   [0, 0, 5],

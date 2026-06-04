@@ -49,7 +49,7 @@ intensity *= 6.0;
 
   // 7. couleur finale (mix propre)
   vec3 color = mix(baseColor, energyColor, glow);
-   color *= 1.0;
+   color *= 2.0;
 
   gl_FragColor = vec4(color, 1.0);
 

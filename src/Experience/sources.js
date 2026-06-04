@@ -55,6 +55,11 @@ export default [
     path: "models/Cubeloca/Cube_Loca.glb",
   },
   {
+    name: "cube_loca2",
+    type: "gltfModel",
+    path: "models/Cubeloca/Cube_Loca2.glb",
+  },
+  {
     name: "back_building",
     type: "gltfModel",
     path: "models/BackgroundBuildings/backBuilding.glb",

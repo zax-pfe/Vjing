@@ -45,6 +45,8 @@ export default class Building extends EventEmitter {
     console.log("offSetShader", this.offSetShader);
     this.buildingStatus = 0;
     this.buildingStatusMax = 3;
+    this.buildingMaxHeight = 6;
+    this.animHeight = 0.25;
     this.animationDuration = 0.2;
 
     // faire un array de taille entre 1 et 2 pour chaque box
@@ -54,8 +56,6 @@ export default class Building extends EventEmitter {
       // this.setDebug();
     }
 
-    this.setGeometry();
-    this.setTextures();
     this.setMaterial();
     this.setMesh();
 
@@ -65,22 +65,6 @@ export default class Building extends EventEmitter {
     // créer 3 autre box, qui seront dans la grosses
     // mettre le tout dans un group et le group dans la scene
   }
-
-  setGeometry() {
-    this.geometryList = [];
-    this.geometry_1 = new THREE.BoxGeometry(1, this.arraySizes[0] + 0.4, 1);
-    // this.geometry_1 = this.backBuilding.scene.children[0].geometry;
-    // console.log("GEOMETRY", this.backBuilding.scene.children[0]);
-    this.geometryList.push(this.geometry_1);
-    this.geometry_2 = new THREE.BoxGeometry(0.8, this.arraySizes[1], 0.8);
-    this.geometryList.push(this.geometry_2);
-    this.geometry_3 = new THREE.BoxGeometry(0.6, this.arraySizes[2], 0.6);
-    this.geometryList.push(this.geometry_3);
-    this.geometry_4 = new THREE.BoxGeometry(0.4, this.arraySizes[3], 0.4);
-    this.geometryList.push(this.geometry_4);
-  }
-
-  setTextures() {}
 
   setMaterial() {
     this.material = new THREE.ShaderMaterial({
@@ -94,10 +78,10 @@ export default class Building extends EventEmitter {
   }
 
   setModel(index) {
-    this.model = this.backBuildingList[index].scene;
+    this.model = this.backBuildingList[index % this.backBuildingList.length].scene;
     this.backgroundBuildings = this.model.children[0].children;
     console.log("model", this.backgroundBuildings);
-    this.model.scale.set(1 - 0.2 * index, 1 - 0.2 * index, 1 - 0.2 * index);
+    this.model.scale.set(1 - 0.15 * index, 1 - 0.15 * index, 1 - 0.15 * index);
     this.backgroundBuildings[0].material = new THREE.MeshBasicMaterial({
       color: new THREE.Color(0, 0, 0),
     });
@@ -105,7 +89,9 @@ export default class Building extends EventEmitter {
       vertexShader: vertex,
       fragmentShader: fragment,
       uniforms: {
-        uRevealMask: { value: this.backBuildingTextureList[index] },
+        uRevealMask: {
+          value: this.backBuildingTextureList[index % this.backBuildingTextureList.length],
+        },
         uTime: { value: 0 },
         uOffSet: { value: this.offSetShader },
       },
@@ -117,8 +103,9 @@ export default class Building extends EventEmitter {
 
   setMesh() {
     this.group = new THREE.Group();
-    for (let i = 0; i < this.geometryList.length; i++) {
+    for (let i = 0; i < this.buildingMaxHeight; i++) {
       // mesh.position.y = i * 0.5;
+
       const building = this.setModel(i);
       this.group.add(building);
     }
@@ -154,7 +141,7 @@ export default class Building extends EventEmitter {
         console.log("push first building", this.buildingStatus);
 
         gsap.to(this.group.children[1].position, {
-          y: 0.25,
+          y: this.animHeight,
           duration: this.animationDuration,
         });
       }
@@ -173,7 +160,7 @@ export default class Building extends EventEmitter {
         this.buildingStatus = this.buildingStatus + 1;
         console.log("push up  building", this.buildingStatus);
         gsap.to(this.group.children[this.buildingStatus].position, {
-          y: 0.25 * this.buildingStatus,
+          y: this.animHeight * this.buildingStatus,
           duration: this.animationDuration,
         });
       } else {
