@@ -45,6 +45,11 @@ export default [
     path: "models/TourChrysler/Tour_Chrysler.glb",
   },
   {
+    name: "tour_chrysler2",
+    type: "gltfModel",
+    path: "models/TourChrysler/TourChrysler2.glb",
+  },
+  {
     name: "route",
     type: "gltfModel",
     path: "models/route/Route.glb",
@@ -111,21 +116,18 @@ export default [
   },
 
   // _______________ MASK _______________//
-  {
-    name: "revealMask",
-    type: "texture",
-    path: "images/masks/revealMask.jpg",
-  },
+
   {
     name: "motifMask",
     type: "texture",
     path: "images/masks/motifMask.png",
   },
   {
-    name: "motifMaskBaked",
+    name: "revealMask",
     type: "texture",
-    path: "images/masks/motifMaskBaked.png",
+    path: "images/masks/revealMask.jpg",
   },
+
   {
     name: "routeMaskBaked",
     type: "texture",
@@ -156,5 +158,12 @@ export default [
     name: "maison4_texture",
     type: "texture",
     path: "models/BackgroundBuildings/textures/Forme_BAT4.png",
+  },
+
+  // _______________ MASK CHRYSLER TOWER _______________//
+  {
+    name: "motifMaskBaked",
+    type: "texture",
+    path: "images/masks/motifMaskBaked.png",
   },
 ];

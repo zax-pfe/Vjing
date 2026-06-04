@@ -39,6 +39,7 @@ export default class Camera {
       };
       this.debugFolder.add(debugObject, "rotateCamera");
       this.debugFolder.add(debugObject, "moveCameraUp");
+      // this.debugFolder.add(this, "activateRotation", true).name("auto rotate on kick");
     }
 
     this.setInstance();
@@ -142,7 +143,7 @@ export default class Camera {
 
     if (this.listenKick && this.sound.kick > 0.6) {
       this.listenKick = false;
-      this.onBeat();
+      // this.onBeat();
     }
 
     if (!this.listenKick) {

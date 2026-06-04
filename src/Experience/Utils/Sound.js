@@ -68,6 +68,6 @@ export default class Sound extends EventEmitter {
   }
 
   update() {
-    this.calculateBPM();
+    // this.calculateBPM();
   }
 }
