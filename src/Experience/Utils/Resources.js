@@ -22,7 +22,7 @@ export default class Resources extends EventEmitter {
     this.loaders = {};
     this.loaders.gltfLoader = new GLTFLoader();
     this.loaders.dracoLoader = new DRACOLoader();
-    this.loaders.dracoLoader.setDecoderPath("/draco/"); // dossier contenant les décodeurs Draco
+    this.loaders.dracoLoader.setDecoderPath("draco/"); // dossier contenant les décodeurs Draco
     this.loaders.gltfLoader.setDRACOLoader(this.loaders.dracoLoader);
     this.loaders.textureLoader = new THREE.TextureLoader();
     this.loaders.cubeTextureLoader = new THREE.CubeTextureLoader();

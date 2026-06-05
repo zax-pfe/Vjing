@@ -24,6 +24,7 @@ export default class Camera extends EventEmitter {
     this.radius = 18;
     this.incrementAngle = (2 * Math.PI) / 8; // 15 positions around the circle
     this.topAngle = 0; // angle de rotation en vue du dessus
+    this.beatCounter = 0;
 
     this.cameraTopPosition = new THREE.Vector3(0, 30, 0);
 
@@ -70,6 +71,7 @@ export default class Camera extends EventEmitter {
 
   onBeat() {
     if (this.cameraIsTop) {
+      this.beatCounter++;
       // Vue du dessus : rotation sur elle-même autour de Y
       this.topAngle += this.incrementAngle;
 
@@ -86,6 +88,11 @@ export default class Camera extends EventEmitter {
         onUpdate: () => {
           this.controls.update();
         },
+      });
+
+      gsap.to(this.instance.position, {
+        y: this.cameraTopPosition.y - this.beatCounter * 1, // la caméra descend légèrement à chaque beat
+        duration: 0.2,
       });
     } else {
       // Vue normale : rotation autour de la scène sur X/Z
@@ -108,6 +115,8 @@ export default class Camera extends EventEmitter {
   }
 
   moveUp() {
+    this.beatCounter = 0;
+
     gsap.killTweensOf(this.instance.position);
     gsap.killTweensOf(this.controls.target);
     if (!this.cameraIsTop) {
@@ -167,6 +176,7 @@ export default class Camera extends EventEmitter {
 
   update() {
     this.controls.update();
+
     // console.log(this.instance.position);
   }
 }
