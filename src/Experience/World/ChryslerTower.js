@@ -81,6 +81,15 @@ export default class ChryslerTower {
     this.model.scale.set(this.modelScale, this.modelScale, this.modelScale);
     this.scene.add(this.model);
     // this.scene.add(this.murLumiere2);
+
+    // add tower to the scene
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+
+    const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const towerBody = new THREE.Mesh(geometry, material);
+    towerBody.position.set(0, -1, 0);
+    towerBody.scale.set(3.2, 5, 3.2);
+    this.scene.add(towerBody);
   }
 
   setMurLumiere() {

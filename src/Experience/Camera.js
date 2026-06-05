@@ -20,6 +20,7 @@ export default class Camera extends EventEmitter {
     this.cameraStatus = "normal"; // 'normal' | 'top' | 'far'
 
     this.initialPosition = new THREE.Vector3(0, 8, 10);
+    this.initialTarget = new THREE.Vector3(0, 3.2, 0);
     this.currentPosition = this.initialPosition.clone();
     this.radius = 18;
     this.incrementAngle = (2 * Math.PI) / 8; // 15 positions around the circle
@@ -138,19 +139,22 @@ export default class Camera extends EventEmitter {
         },
       });
     } else {
+      this.controls.target.copy(this.initialTarget);
+
       // Redescendre à la position précédente
       gsap.to(this.instance.position, {
-        x: this.currentPosition.x,
-        y: this.currentPosition.y,
-        z: this.currentPosition.z,
+        x: this.initialPosition.x,
+        y: this.initialPosition.y,
+        z: this.initialPosition.z,
         duration: 0.1,
         onUpdate: () => {
-          this.instance.lookAt(0, 0, 0);
+          this.instance.lookAt(this.initialTarget.x, this.initialTarget.y, this.initialTarget.z);
         },
         onComplete: () => {
           this.transitioning = false;
           this.cameraIsTop = false;
-          this.controls.target.set(0, 0, 0);
+          this.currentPosition.copy(this.initialPosition);
+          this.controls.target.copy(this.initialTarget);
         },
       });
     }
@@ -165,7 +169,7 @@ export default class Camera extends EventEmitter {
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
-    this.controls.target.set(0, 3.2, 0);
+    this.controls.target.copy(this.initialTarget);
     this.controls.enableDamping = true;
   }
 
