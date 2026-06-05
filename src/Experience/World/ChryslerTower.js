@@ -7,9 +7,6 @@ import fragment from "../shaders/boxMotifs/fragment.glsl";
 import motif_vertex from "../shaders/ChryslerTower/Motifs/vertex.glsl";
 import motif_fragment from "../shaders/ChryslerTower/Motifs/fragment.glsl";
 
-import ornement_vertex from "../shaders/ChryslerTower/Ornement/vertex.glsl";
-import ornement_fragment from "../shaders/ChryslerTower/Ornement/fragment.glsl";
-
 import gsap from "gsap";
 
 export default class ChryslerTower {

@@ -22,10 +22,12 @@ intensity *= 0.6;
 
   // float speed = 0.5; // ajuste la vitesse ici
   // float wave = abs(fract(uTime * speed) * 2.0 - 1.0); // valeur entre 
-  // wave = 1.0-  wave;
 
-float speed = 0.1;
-float wave = fract(uTime * speed) * 0.67;
+float speed = 0.3;
+// je veux que mon wave aille dans lautre sens
+float wave = fract(uTime * -speed) * 0.67;
+
+  // wave = 1.0-  wave;
 // float wave = 0.01;
 
   float thickness = 0.06;

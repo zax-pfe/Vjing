@@ -4,12 +4,13 @@ export default [
   {
     name: "tour_chrysler2",
     type: "gltfModel",
-    path: "models/TourChrysler/TourChrysler2.glb",
+    path: "models/TourChrysler/TourChrysler2_compressed.glb",
   },
+
   {
     name: "route",
     type: "gltfModel",
-    path: "models/route/Route.glb",
+    path: "models/route/Route_compressed.glb",
   },
 
   {
