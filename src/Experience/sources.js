@@ -1,27 +1,4 @@
 export default [
-  {
-    name: "environmentMapTexture",
-    type: "cubeTexture",
-    path: [
-      "textures/environmentMap/px.jpg",
-      "textures/environmentMap/nx.jpg",
-      "textures/environmentMap/py.jpg",
-      "textures/environmentMap/ny.jpg",
-      "textures/environmentMap/pz.jpg",
-      "textures/environmentMap/nz.jpg",
-    ],
-  },
-  {
-    name: "grassColorTexture",
-    type: "texture",
-    path: "textures/dirt/color.jpg",
-  },
-  {
-    name: "grassNormalTexture",
-    type: "texture",
-    path: "textures/dirt/normal.jpg",
-  },
-
   // _______________ GLB MODELS _______________//
 
   {
@@ -70,12 +47,6 @@ export default [
     path: "images/palette/palette3.png",
   },
 
-  {
-    name: "motif1",
-    type: "texture",
-    path: "images/motifs/motif1.png",
-  },
-
   // _______________ MASK _______________//
 
   {
@@ -83,22 +54,13 @@ export default [
     type: "texture",
     path: "images/masks/motifMask.png",
   },
-  {
-    name: "revealMask",
-    type: "texture",
-    path: "images/masks/revealMask.jpg",
-  },
 
   {
     name: "routeMaskBaked",
     type: "texture",
     path: "images/masks/routeMaskBaked.png",
   },
-  {
-    name: "backgroundBuildingMaskBaked",
-    type: "texture",
-    path: "images/masks/backgroundBuildingMaskBaked.png",
-  },
+
   // _______________ MASK BACKGROUND BAT _______________//
   {
     name: "maison1_texture",

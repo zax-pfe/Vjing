@@ -156,7 +156,7 @@ export default class Camera extends EventEmitter {
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
-    this.controls.target.set(0, 4, 0);
+    this.controls.target.set(0, 3.2, 0);
     this.controls.enableDamping = true;
   }
 

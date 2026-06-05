@@ -12,7 +12,6 @@ export default class Building extends EventEmitter {
 
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    this.revealMask = this.resources.items.backgroundBuildingMaskBaked;
 
     this.backBuilding = this.resources.items.back_building;
 
