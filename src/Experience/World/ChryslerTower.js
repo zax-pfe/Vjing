@@ -83,6 +83,7 @@ export default class ChryslerTower {
     this.setTop();
     this.model.scale.set(this.modelScale, this.modelScale, this.modelScale);
     this.scene.add(this.model);
+    // this.scene.add(this.murLumiere2);
   }
 
   setMurLumiere() {
@@ -98,6 +99,20 @@ export default class ChryslerTower {
         uVolume: { value: 0 },
       },
     });
+
+    // this.murLumiere2 = this.murLumiere.clone();
+    // this.murLumiere2.position.y -= 0.5;
+    // this.murLumiere2.material = new THREE.ShaderMaterial({
+    //   vertexShader: motif_vertex,
+    //   fragmentShader: motif_fragment,
+    //   uniforms: {
+    //     uTime: { value: 0 },
+    //     uSpeed: { value: this.speed },
+    //     uRevealMask: { value: this.motifMask },
+    //     uVolume: { value: 0 },
+    //   },
+    // });
+    // this.model.add(this.murLumiere2);
   }
 
   setOrnementTour() {

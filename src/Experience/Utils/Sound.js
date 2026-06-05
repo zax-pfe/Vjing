@@ -47,8 +47,9 @@ export default class Sound extends EventEmitter {
       this.trigger("kickHard");
       this.readKickHard = false;
       this.currentKickHard++;
+
       if (this.currentKickHard >= this.kickHardBeforeTransition) {
-        // this.trigger("transition_top");
+        this.trigger("transition_top");
         console.log("transition_top event triggered from AnalyzerDebug");
         this.currentKickHard = 0;
       }

@@ -24,7 +24,7 @@ intensity *= 0.6;
   // float wave = abs(fract(uTime * speed) * 2.0 - 1.0); // valeur entre 
   // wave = 1.0-  wave;
 
-float speed = 0.5;
+float speed = 0.1;
 float wave = fract(uTime * speed) * 0.67;
 // float wave = 0.01;
 

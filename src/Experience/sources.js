@@ -23,27 +23,7 @@ export default [
   },
 
   // _______________ GLB MODELS _______________//
-  // {
-  //   name: "foxModel",
-  //   type: "gltfModel",
-  //   path: "models/Fox/glTF/Fox.gltf",
-  // },
-  // {
-  //   name: "mur_chrysler",
-  //   type: "gltfModel",
-  //   path: "models/Mur_Chrysler/Mur_Chrysler.glb",
-  // },
-  // {
-  //   name: "mur_chrysler3",
-  //   type: "gltfModel",
-  //   path: "models/Mur_Chrysler/Mur_Chrysler3.glb",
-  // },
 
-  {
-    name: "tour_chrysler",
-    type: "gltfModel",
-    path: "models/TourChrysler/Tour_Chrysler.glb",
-  },
   {
     name: "tour_chrysler2",
     type: "gltfModel",
@@ -54,21 +34,13 @@ export default [
     type: "gltfModel",
     path: "models/route/Route.glb",
   },
-  {
-    name: "cube_loca",
-    type: "gltfModel",
-    path: "models/Cubeloca/Cube_Loca.glb",
-  },
+
   {
     name: "cube_loca2",
     type: "gltfModel",
     path: "models/Cubeloca/Cube_Loca2.glb",
   },
-  {
-    name: "back_building",
-    type: "gltfModel",
-    path: "models/BackgroundBuildings/backBuilding.glb",
-  },
+
   {
     name: "back_building1",
     type: "gltfModel",
@@ -91,17 +63,6 @@ export default [
   },
 
   // _______________ TEXTURES _______________//
-
-  {
-    name: "paletteTexture",
-    type: "texture",
-    path: "images/palette/palette.png",
-  },
-  {
-    name: "paletteTexture2",
-    type: "texture",
-    path: "images/palette/palette2.png",
-  },
 
   {
     name: "paletteTexture3",

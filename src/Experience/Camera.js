@@ -16,6 +16,9 @@ export default class Camera extends EventEmitter {
     this.canvas = this.experience.canvas;
     this.debug = this.experience.debug;
     this.cameraIsTop = false;
+
+    this.cameraStatus = "normal"; // 'normal' | 'top' | 'far'
+
     this.initialPosition = new THREE.Vector3(0, 8, 10);
     this.currentPosition = this.initialPosition.clone();
     this.radius = 18;
