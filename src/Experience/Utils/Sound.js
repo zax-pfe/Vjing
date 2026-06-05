@@ -7,21 +7,21 @@ export default class Sound extends EventEmitter {
   constructor() {
     super();
     this.experience = new Experience();
-    this.debug = this.experience.debug;
+    // this.debug = this.experience.debug;
 
     this.kickHardBeforeTransition = 8;
     this.currentKickHard = 0;
 
-    if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder("sound");
-      const debugObject = {
-        tranision: () => {
-          this.trigger("transition_top");
-          console.log("transition event triggered from debug folder");
-        },
-      };
-      this.debugFolder.add(debugObject, "tranision").name("simulate kick");
-    }
+    // if (this.debug.active) {
+    //   this.debugFolder = this.debug.ui.addFolder("sound");
+    //   const debugObject = {
+    //     tranision: () => {
+    //       this.trigger("transition_top");
+    //       console.log("transition event triggered from debug folder");
+    //     },
+    //   };
+    //   this.debugFolder.add(debugObject, "tranision").name("simulate kick");
+    // }
 
     this.time = this.experience.time;
     // 'auto' : mode 'live' en standalone, 'receive' dans le VJ host.
@@ -73,6 +73,23 @@ export default class Sound extends EventEmitter {
       this.kick = a.kick;
       this.kickHard = a.kickHard;
       // volumeByFrequency est mis à jour "en place", même référence
+    });
+
+    this.analyzer.onLoad(() => {
+      console.log("Audio loaded, starting analyzer");
+      this.trigger("audio_loaded");
+      // this.analyzer.start();
+    });
+
+    this.analyzer.onPlay(() => {
+      console.log("Play analyzer");
+      this.trigger("play");
+      // this.analyzer.start();
+    });
+    this.analyzer.onStop(() => {
+      console.log("Stop analyzer");
+      this.trigger("stop");
+      // this.analyzer.start();
     });
   }
 

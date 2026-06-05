@@ -25,25 +25,34 @@ export default class Experience {
     // Options
     this.canvas = _canvas;
 
-    // Setup
-    this.debug = new Debug();
-    this.sizes = new Sizes();
-    this.time = new Time();
-    this.scene = new THREE.Scene();
-    this.resources = new Resources(sources);
-    this.world = new World();
     this.sound = new Sound();
-    this.camera = new Camera();
-    this.renderer = new Renderer();
 
-    // Resize event
-    this.sizes.on("resize", () => {
-      this.resize();
+    this.sound.on("audio_loaded", () => {
+      // Setup
+      this.debug = new Debug();
+      this.sizes = new Sizes();
+      this.time = new Time();
+      this.scene = new THREE.Scene();
+      this.resources = new Resources(sources);
+      this.world = new World();
+      this.camera = new Camera();
+      this.renderer = new Renderer();
+
+      // Resize event
+      this.sizes.on("resize", () => {
+        this.resize();
+      });
     });
 
-    // Time tick event
-    this.time.on("tick", () => {
-      this.update();
+    this.sound.on("play", () => {
+      // Time tick event
+      this.time.on("tick", () => {
+        this.update();
+      });
+    });
+
+    this.sound.on("stop", () => {
+      this.destroy();
     });
   }
 
