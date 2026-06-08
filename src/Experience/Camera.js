@@ -62,7 +62,7 @@ export default class Camera extends EventEmitter {
   }
 
   setRenderer() {
-    console.log("Camera received setRenderer event");
+    // console.log("Camera received setRenderer event");
     this.renderer = this.experience.renderer;
     this.experience.renderer.on("transition_complete", () => {
       this.transitioning = true;

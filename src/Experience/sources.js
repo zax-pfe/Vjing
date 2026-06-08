@@ -2,9 +2,15 @@ export default [
   // _______________ GLB MODELS _______________//
 
   {
-    name: "tour_chrysler2",
+    name: "tour_chrysler",
     type: "gltfModel",
     path: "models/TourChrysler/TourChrysler2_compressed.glb",
+  },
+
+  {
+    name: "tour_chrysler_rigged",
+    type: "gltfModel",
+    path: "models/TourChrysler/TourChryslerRigged_compressed.glb",
   },
 
   {
@@ -18,6 +24,8 @@ export default [
     type: "gltfModel",
     path: "models/Cubeloca/Cube_Loca2.glb",
   },
+
+  // __________ backbuildings__________//
 
   {
     name: "back_building1",

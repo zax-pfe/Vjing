@@ -21,7 +21,7 @@ uniform float uScale;
 void main() {
 
 
-
+  
   vec2 displacedUv = vUv + cnoise(vUv*uStrengthRatio*uStrength) * uScale; 
     // vec2 displacedUv = vUv + cnoise(vUv*uStrengthRatio); 
 

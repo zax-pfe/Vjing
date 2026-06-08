@@ -76,7 +76,7 @@ export default class Sound extends EventEmitter {
     });
 
     this.analyzer.onLoad(() => {
-      console.log("Audio loaded, starting analyzer");
+      // console.log("Audio loaded, starting analyzer");
       this.trigger("audio_loaded");
       // this.analyzer.start();
     });

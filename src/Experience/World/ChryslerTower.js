@@ -4,8 +4,8 @@ import Experience from "../Experience.js";
 import vertex from "../shaders/boxMotifs/vertex.glsl";
 import fragment from "../shaders/boxMotifs/fragment.glsl";
 
-import motif_vertex from "../shaders/ChryslerTower/Motifs/vertex.glsl";
-import motif_fragment from "../shaders/ChryslerTower/Motifs/fragment.glsl";
+import lightWall_vertex from "../shaders/ChryslerTower/Motifs/vertex.glsl";
+import lightWall_fragment from "../shaders/ChryslerTower/Motifs/fragment.glsl";
 
 import gsap from "gsap";
 
@@ -19,7 +19,7 @@ export default class ChryslerTower {
     this.debug = this.experience.debug;
     this.speed = 2;
 
-    this.resource = this.resources.items.tour_chrysler2;
+    this.resource = this.resources.items.tour_chrysler_rigged;
 
     this.motifMask = this.resources.items.murLumiere;
     this.ornementMask = this.resources.items.Ornement;
@@ -68,23 +68,37 @@ export default class ChryslerTower {
   }
 
   setModel() {
-    // this.geometry = new THREE.PlaneGeometry(1, 1, 1);
     this.model = this.resource.scene;
-    this.children = this.model.children;
+    this.towerChildren = this.model.children[0].children;
+
+    //  'deco_light_wall_1'
+    //  'deco_lightwall_0'
+    //  'deco_lightwall_2'
+    //  'deco_lightwall_3'
+    //  'deco_lightwall_4'
+    //  'deco_tower'
+    //  'struct_0'
+    //  'struct_1'
+    //  'struct_2'
+    //  'struct_3'
+    //  'struct_4'
+    //  'struct_pique'
+    //  'struct_top'
+
     console.log("children ", this.children);
     this.model.position.set(0, 1, 0);
     this.setMurLumiere();
     this.setOrnementTour();
-    this.setPique();
-    this.setCube();
-    this.setTop();
+    // this.setPique();
+    // this.setCube();
+    // this.setTop();
     this.model.scale.set(this.modelScale, this.modelScale, this.modelScale);
     this.scene.add(this.model);
-    // this.scene.add(this.murLumiere2);
+  }
 
+  addBlackTowerBody() {
     // add tower to the scene
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-
     const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const towerBody = new THREE.Mesh(geometry, material);
     towerBody.position.set(0, -1, 0);
@@ -93,48 +107,45 @@ export default class ChryslerTower {
   }
 
   setMurLumiere() {
-    this.murLumiere = this.children[2];
-
-    this.murLumiere.material = new THREE.ShaderMaterial({
-      vertexShader: motif_vertex,
-      fragmentShader: motif_fragment,
+    this.lightWalls = [];
+    this.lightWallMaterial = new THREE.ShaderMaterial({
+      vertexShader: lightWall_vertex,
+      fragmentShader: lightWall_fragment,
       uniforms: {
         uTime: { value: 0 },
         uSpeed: { value: this.speed },
         uRevealMask: { value: this.motifMask },
         uVolume: { value: 0 },
+        uOffset: { value: 0 },
       },
     });
 
-    // this.murLumiere2 = this.murLumiere.clone();
-    // this.murLumiere2.position.y -= 0.5;
-    // this.murLumiere2.material = new THREE.ShaderMaterial({
-    //   vertexShader: motif_vertex,
-    //   fragmentShader: motif_fragment,
-    //   uniforms: {
-    //     uTime: { value: 0 },
-    //     uSpeed: { value: this.speed },
-    //     uRevealMask: { value: this.motifMask },
-    //     uVolume: { value: 0 },
-    //   },
-    // });
-    // this.model.add(this.murLumiere2);
+    // les elements de 0 a 4 = deco lightwall
+    for (let i = 0; i < 4; i++) {
+      this.lightWalls.push(this.towerChildren[i]);
+      this.lightWalls[i].material = this.lightWallMaterial;
+      // this.lightWalls[i].material.fog = true;
+
+      this.lightWalls[i].material.uniforms.uOffset.value = i * 0.25;
+    }
   }
 
   setOrnementTour() {
-    this.ornementTour = this.children[3];
-    console.log("ornement tour ", this.ornementTour);
-
-    this.ornementTour.material = new THREE.ShaderMaterial({
-      vertexShader: motif_vertex,
-      fragmentShader: motif_fragment,
+    this.ornementTourMaterial = new THREE.ShaderMaterial({
+      vertexShader: lightWall_vertex,
+      fragmentShader: lightWall_fragment,
       uniforms: {
         uTime: { value: 0 },
         uSpeed: { value: this.speed },
         uRevealMask: { value: this.ornementMask },
         uVolume: { value: 0 },
+        uOffset: { value: 0 },
       },
     });
+    this.ornementTour = this.towerChildren[5];
+    this.ornementTour.material = this.ornementTourMaterial;
+
+    console.log("ornement tour ", this.ornementTour);
   }
 
   setPique() {
@@ -142,8 +153,8 @@ export default class ChryslerTower {
     console.log("pique ", this.pique);
 
     this.pique.material = new THREE.ShaderMaterial({
-      vertexShader: motif_vertex,
-      fragmentShader: motif_fragment,
+      vertexShader: lightWall_vertex,
+      fragmentShader: lightWall_fragment,
       uniforms: {
         uTime: { value: 0 },
         uSpeed: { value: this.speed },
@@ -171,16 +182,20 @@ export default class ChryslerTower {
   }
 
   update() {
-    this.murLumiere.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
-    this.ornementTour.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
-    this.pique.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
-    this.murLumiere.material.uniforms.uVolume.value = this.sound.volumeSmooth;
-    this.ornementTour.material.uniforms.uVolume.value = this.sound.volumeSmooth;
-    this.pique.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    // Mur lumiere
+    this.lightWalls.forEach((wall) => {
+      wall.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+      wall.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    });
 
-    // if (this.sound.kick > 0.9) {
-    //   this.onBeat();
-    // }
-    // console.log("volume ", this.sound.volumeByFrequency);
+    // Ornement tour
+    this.ornementTour.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    this.ornementTour.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    // this.murLumiere.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    // this.ornementTour.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    // this.pique.material.uniforms.uTime.value += this.experience.time.delta * 0.001;
+    // this.murLumiere.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    // this.ornementTour.material.uniforms.uVolume.value = this.sound.volumeSmooth;
+    // this.pique.material.uniforms.uVolume.value = this.sound.volumeSmooth;
   }
 }
