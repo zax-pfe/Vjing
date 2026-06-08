@@ -9,6 +9,7 @@ import World from "./World/World.js";
 import Resources from "./Utils/Resources.js";
 import sources from "./sources.js";
 import Sound from "./Utils/Sound.js";
+import Stats from "./Utils/Stats.js";
 let instance = null;
 
 export default class Experience {
@@ -37,6 +38,7 @@ export default class Experience {
       this.world = new World();
       this.camera = new Camera();
       this.renderer = new Renderer();
+      this.stats = new Stats();
 
       // Resize event
       this.sizes.on("resize", () => {
@@ -68,6 +70,7 @@ export default class Experience {
     this.world.update();
     this.renderer.update();
     this.sound.update();
+    this.stats.update();
   }
 
   destroy() {
